@@ -428,7 +428,9 @@ class realtime:
 class historic_data:
 
     def __init__(self, buoy, year, year_range=None):
-
+        self.buoy = buoy
+        self.year = year
+        self.year_range = year_range
         link = 'http://www.ndbc.noaa.gov/view_text_file.php?filename='
         link += '{}h{}.txt.gz&dir=data/historical/'.format(buoy, year)
         self.link = link
