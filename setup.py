@@ -5,6 +5,6 @@ setup(
 	author='Nick Cortale',
 	version='0.0.1',
 	description='buoypy scrapes the National Data Buoy Center and dumps it into pandas dataframes.',
-	packages=['buoypy']
-
+	packages=['buoypy'],
+	install_requires=['urllib',]
 )
