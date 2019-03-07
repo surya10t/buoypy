@@ -431,6 +431,7 @@ class historic_data:
         self.buoy = buoy
         self.year = year
         self.year_range = year_range
+
         link = 'http://www.ndbc.noaa.gov/view_text_file.php?filename='
         link += '{}h{}.txt.gz&dir=data/historical/'.format(buoy, year)
         self.link = link
@@ -439,29 +440,11 @@ class historic_data:
         '''
         Standard Meteorological Data. Data header was changed in 2007. Thus
         the need for the if statement below.
-
-
-
-        WDIR    Wind direction (degrees clockwise from true N)
-        WSPD    Wind speed (m/s) averaged over an eight-minute period
-        GST     Peak 5 or 8 second gust speed (m/s)
-        WVHT    Significant wave height (meters) is calculated as
-                the average of the highest one-third of all of the
-                wave heights during the 20-minute sampling period.
-        DPD     Dominant wave period (seconds) is the period with the maximum wave energy.
-        APD     Average wave period (seconds) of all waves during the 20-minute period.
-        MWD     The direction from which the waves at the dominant period (DPD) are coming.
-                (degrees clockwise from true N)
-        PRES    Sea level pressure (hPa).
-        ATMP    Air temperature (Celsius).
-        WTMP    Sea surface temperature (Celsius).
-        DEWP    Dewpoint temperature
-        VIS     Station visibility (nautical miles).
-        PTDY    Pressure Tendency
-        TIDE    The water level in feet above or below Mean Lower Low Water (MLLW).
-        '''
-
-        link = self.link + 'stdmet/'
+        '''     
+        if(link == None):
+            link = self.link + 'stdmet/'
+            
+        print(link)
 
         #combine the first five date columns YY MM DD hh and make index
         df = pd.read_csv(link, header=0, delim_whitespace=True, dtype=object,
@@ -533,18 +516,18 @@ class historic_data:
         links = []
         for ii in range(start,stop+1):
 
-            base = 'http://www.ndbc.noaa.gov/view_text_file.php?filename='
+            base = 'https://www.ndbc.noaa.gov/view_text_file.php?filename='
             end = '.txt.gz&dir=data/historical/stdmet/'
             link = base + str(self.buoy) + 'h' + str(ii) + end
 
             try:
-                urllib2.urlopen(link)
+                urllib.request.urlopen(link)
                 links.append(link)
 
             except:
                 print(str(ii) + ' not in records')
 
-        #need to also retrieve jan, feb, march, etc.
+        '''#need to also retrieve jan, feb, march, etc.
         month = ['Jan','Feb','Mar','Apr','May','Jun',
             'Jul','Aug','Sep','Oct','Nov','Dec']
         k = [1,2,3,4,5,6,7,8,9,'a','b','c'] #for the links
@@ -554,19 +537,18 @@ class historic_data:
             link = base + str(self.buoy) + str(k[ii]) + '2016' + mid + str(month[ii]) +'/'
 
             try:
-                urllib2.urlopen(link)
+                urllib.request.urlopen(link)
                 links.append(link)
 
             except:
                 print(str(month[ii]) + '2016' + ' not in records')
-                print(link)
+                print(link)'''
 
 
         # start grabbing some data
         df=pd.DataFrame() #initialize empty df
-
+        
         for L in links:
-
             new_df = self.get_stand_meteo(link=L)
             print('Link : ' + L)
             df = df.append(new_df)
